@@ -1,11 +1,19 @@
+import os
+import sys
+
 import requests
 
 
 def download_picture(url: str, filename: str) -> None:
+    filepath = 'images'
+    if not os.path.exists(filepath):
+        try:
+            os.makedirs(filepath)
+        except FileExistsError as ex:
+            print(ex)
     resp = requests.get(url)
     resp.raise_for_status()
-
-    with open(filename, 'wb') as f:
+    with open(f'{filepath}/{filename}', 'wb') as f:
         f.write(resp.content)
 
 
