@@ -4,20 +4,24 @@ from pprint import pprint
 import requests
 
 
-def download_picture(url: str, filename: str) -> None:
-    filepath = 'images'
-    if not os.path.exists(filepath):
+def download_pictures(launch: dict) -> None:
+    flight_number = launch.get('flight_number')
+    img_path = f'images/{flight_number}'
+    if not os.path.exists(img_path):
         try:
-            os.makedirs(filepath)
+            os.makedirs(img_path)
         except FileExistsError as ex:
             print(ex)
-    resp = requests.get(url)
-    resp.raise_for_status()
-    with open(f'{filepath}/{filename}', 'wb') as f:
-        f.write(resp.content)
+
+    img_links = launch.get('links')
+    for index, link in enumerate(img_links, start=1):
+        resp = requests.get(link)
+        resp.raise_for_status()
+        with open(f'{img_path}/{flight_number}_{index}_spacex.jpg', 'wb') as f:
+            f.write(resp.content)
 
 
-def get_all_launches_id(url: str):
+def get_all_launches_id(url: str) -> list:
     resp_all_launches = requests.get(url).json()
     return [lounch['id'] for lounch in resp_all_launches]
 
@@ -46,4 +50,5 @@ def get_last_launch_with_img(launches_id: list, url: str) -> dict:
 if __name__ == '__main__':
     url_launches = 'https://api.spacexdata.com/v5/launches/'
     launches_id = get_all_launches_id(url_launches)
-    pprint(get_last_launch_with_img(launches_id, url_launches))
+    last_launch_with_img = get_last_launch_with_img(launches_id, url_launches)
+    download_pictures(last_launch_with_img)
