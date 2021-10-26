@@ -47,8 +47,12 @@ def get_last_launch_with_img(launches_id: list, url: str) -> dict:
     return last_launch_with_imgs
 
 
-if __name__ == '__main__':
+def fetch_spacex_last_launch() -> None:
     url_launches = 'https://api.spacexdata.com/v5/launches/'
     launches_id = get_all_launches_id(url_launches)
     last_launch_with_img = get_last_launch_with_img(launches_id, url_launches)
     download_pictures(last_launch_with_img)
+
+
+if __name__ == '__main__':
+    fetch_spacex_last_launch()
