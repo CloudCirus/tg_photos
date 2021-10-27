@@ -25,8 +25,9 @@ def download_pictures(links: list, name: str) -> None:
 
 def get_all_launches_id() -> list:
     url = f'https://api.spacexdata.com/v5/launches/'
-    resp_all_launches = requests.get(url).json()
-    return [lounch['id'] for lounch in resp_all_launches]
+    resp = requests.get(url)
+    resp.raise_for_status()
+    return [lounch['id'] for lounch in resp.json()]
 
 
 def get_last_launch_img_links(launches_id: list) -> list:
@@ -69,9 +70,10 @@ def get_apod_img_links(days: int) -> None:
         'start_date': (datetime.now() - timedelta(days)).strftime('%Y-%m-%d'),
         'end_date': datetime.now().strftime('%Y-%m-%d'),
     }
-    resp = requests.get(url, params=options).json()
+    resp = requests.get(url, params=options)
+    resp.raise_for_status()
     links = []
-    for day in resp:
+    for day in resp.json():
         if day.get('media_type') == 'image':
             url = day.get('url')
             if url:
@@ -79,9 +81,35 @@ def get_apod_img_links(days: int) -> None:
     return links
 
 
-def fetch_nasa_apods() -> None:
-    links = get_apod_img_links(10)
+def fetch_nasa_apods(days) -> None:
+    links = get_apod_img_links(days)
     download_pictures(links, 'nasa')
+
+
+def get_nasa_epic_img_links(days: int) -> list:
+    load_dotenv()
+    url_info = 'https://api.nasa.gov/EPIC/api/natural/all'
+    options = {
+        'api_key': os.environ.get('NASA_API_KEY')
+    }
+    resp = requests.get(url_info, params=options)
+    resp.raise_for_status()
+
+    key = options.get('api_key')
+    links = []
+    for day in resp.json()[:days]:
+        date = day.get('date').replace('-', '/').split()[0]
+        image = day.get('image')
+        url_img = f'https://api.nasa.gov/EPIC/archive/natural/{date}/png/{image}.png?api_key={key}'
+        links.append(url_img)
+    return links
+
+
+def fetch_nasa_epic_imgs(days):
+    links = get_nasa_epic_img_links(days)
+    # download_pictures(links, 'nasa_epic')
+    pprint(links)
+    print(len(links))
 
 
 if __name__ == '__main__':
@@ -89,4 +117,5 @@ if __name__ == '__main__':
     # print(get_file_extension('https://example.com/txt/hello%20world.txt?v=9#python'))
     # res = get_apod(30)
     # pprint(res)
-    fetch_nasa_apods()
+    # fetch_nasa_apods(10)
+    fetch_nasa_epic_imgs(5)
