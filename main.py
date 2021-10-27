@@ -23,14 +23,19 @@ def download_pictures(links: list, name: str) -> None:
             f.write(resp.content)
 
 
-def get_all_launches_id() -> list:
+def _get_file_extension(url: str) -> str:
+    path = urlsplit(url).path
+    return os.path.splitext(path)[1]
+
+
+def get_all_spx_launches_id() -> list:
     url = f'https://api.spacexdata.com/v5/launches/'
     resp = requests.get(url)
     resp.raise_for_status()
     return [lounch['id'] for lounch in resp.json()]
 
 
-def get_last_launch_img_links(launches_id: list) -> list:
+def get_spx_last_launch_img_links(launches_id: list) -> list:
     url_launches = f'https://api.spacexdata.com/v5/launches/'
     last_launch_with_imgs = {}
     counter = 1
@@ -51,18 +56,7 @@ def get_last_launch_img_links(launches_id: list) -> list:
     return last_launch_with_imgs.get('links')
 
 
-def fetch_spacex_last_launch() -> None:
-    launches_id = get_all_launches_id()
-    last_launch_with_img = get_last_launch_img_links(launches_id)
-    download_pictures(last_launch_with_img, 'spacex')
-
-
-def _get_file_extension(url: str) -> str:
-    path = urlsplit(url).path
-    return os.path.splitext(path)[1]
-
-
-def get_apod_img_links(days: int) -> None:
+def get_nasa_apod_img_links(days: int) -> None:
     load_dotenv()
     url = 'https://api.nasa.gov/planetary/apod'
     options = {
@@ -79,11 +73,6 @@ def get_apod_img_links(days: int) -> None:
             if url:
                 links.append(url)
     return links
-
-
-def fetch_nasa_apods(days) -> None:
-    links = get_apod_img_links(days)
-    download_pictures(links, 'nasa')
 
 
 def get_nasa_epic_img_links(days: int) -> list:
@@ -105,17 +94,25 @@ def get_nasa_epic_img_links(days: int) -> list:
     return links
 
 
+def fetch_spacex_last_launch() -> None:
+    launches_id = get_all_spx_launches_id()
+    last_launch_with_img = get_spx_last_launch_img_links(launches_id)
+    download_pictures(last_launch_with_img, 'spacex')
+
+
+def fetch_nasa_apods(days) -> None:
+    links = get_nasa_apod_img_links(days)
+    download_pictures(links, 'nasa')
+
+
 def fetch_nasa_epic_imgs(days):
     links = get_nasa_epic_img_links(days)
-    # download_pictures(links, 'nasa_epic')
+    download_pictures(links, 'nasa_epic')
     pprint(links)
     print(len(links))
 
 
 if __name__ == '__main__':
-    # fetch_spacex_last_launch()
-    # print(get_file_extension('https://example.com/txt/hello%20world.txt?v=9#python'))
-    # res = get_apod(30)
-    # pprint(res)
-    # fetch_nasa_apods(10)
-    fetch_nasa_epic_imgs(5)
+    fetch_spacex_last_launch()
+    fetch_nasa_apods(10)
+    fetch_nasa_epic_imgs(10)
