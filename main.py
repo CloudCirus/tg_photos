@@ -1,5 +1,6 @@
 import os
 from pprint import pprint
+from urllib.parse import urlsplit
 
 import requests
 
@@ -54,5 +55,11 @@ def fetch_spacex_last_launch() -> None:
     download_pictures(last_launch_with_img)
 
 
+def get_file_extension(url):
+    path = urlsplit(url).path
+    return os.path.splitext(path)[1]
+    
+
 if __name__ == '__main__':
-    fetch_spacex_last_launch()
+    # fetch_spacex_last_launch()
+    print(get_file_extension('https://example.com/txt/hello%20world.txt?v=9#python'))
