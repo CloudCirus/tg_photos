@@ -1,17 +1,17 @@
+import argparse
 import os
 from datetime import datetime, timedelta
-from pprint import pprint
 from urllib.parse import urlsplit
 
 import requests
 from dotenv import load_dotenv
 
 
-def download_pictures(links: list, name: str) -> None:
-    img_path = f'images/{name}'
-    if not os.path.exists(img_path):
+def download_pictures(links: list, whose_pic_name: str) -> None:
+    path = f'images/{whose_pic_name}'
+    if not os.path.exists(path):
         try:
-            os.makedirs(img_path)
+            os.makedirs(path)
         except FileExistsError as ex:
             print(ex)
 
@@ -19,7 +19,7 @@ def download_pictures(links: list, name: str) -> None:
         resp = requests.get(link)
         resp.raise_for_status()
         ext = _get_file_extension(link)
-        with open(f'{img_path}/{index}_{name}{ext}', 'wb') as f:
+        with open(f'{path}/{index}_{whose_pic_name}{ext}', 'wb') as f:
             f.write(resp.content)
 
 
@@ -39,7 +39,6 @@ def get_spx_last_launch_img_links(launches_id: list) -> list:
     url_launches = f'https://api.spacexdata.com/v5/launches/'
     last_launch_with_imgs = {}
     counter = 1
-    print(counter)
     for id in reversed(launches_id):
         url = f'{url_launches}{id}'
         resp = requests.get(url).json()
@@ -52,7 +51,6 @@ def get_spx_last_launch_img_links(launches_id: list) -> list:
             }
             break
         counter += 1
-        print(counter)
     return last_launch_with_imgs.get('links')
 
 
@@ -96,8 +94,8 @@ def get_nasa_epic_img_links(days: int) -> list:
 
 def fetch_spacex_last_launch() -> None:
     launches_id = get_all_spx_launches_id()
-    last_launch_with_img = get_spx_last_launch_img_links(launches_id)
-    download_pictures(last_launch_with_img, 'spacex')
+    last_launch = get_spx_last_launch_img_links(launches_id)
+    download_pictures(last_launch, 'spacex')
 
 
 def fetch_nasa_apods(days) -> None:
@@ -108,11 +106,23 @@ def fetch_nasa_apods(days) -> None:
 def fetch_nasa_epic_imgs(days):
     links = get_nasa_epic_img_links(days)
     download_pictures(links, 'nasa_epic')
-    pprint(links)
-    print(len(links))
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--spx', type=bool,
+        help='download spacex lastlaunch pics')
+    parser.add_argument(
+        '--apods', type=int, help='number of day to dwload nasa apods pics', default=1)
+    parser.add_argument(
+        '--epic', type=int, help='number of day to dwload nasa epic pics', default=1)
+    args = parser.parse_args()
+    print('Wait for downloading...')
+    if args.spx:
+        fetch_spacex_last_launch()
+    fetch_nasa_apods(args.apods)
+    fetch_nasa_epic_imgs(args.epic)
 
 
 if __name__ == '__main__':
-    fetch_spacex_last_launch()
-    fetch_nasa_apods(10)
-    fetch_nasa_epic_imgs(10)
+    main()
