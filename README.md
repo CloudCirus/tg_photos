@@ -43,20 +43,24 @@ When you create telegramm bot and channel for posting photo, you need to add you
 
 ## Get started
 
-Download photo in your project dir
+Download nasa photos in your project dir:
 ```
-python3 space_photo.py
+python3 fetch_nasa.py
 ```
 You can use args:
-- --spx=True/False for find and download spacex last spacex launch photos.
 - --apods=int for download chosen number nasa apods pics, default 1
 - --epic=int for download shosen number of nasa pics Earth planet, default 1
 
-Start posting photo in your telegram channel, with delay which you input in .env vars
+Find and download last spacex launch photos in your project dir:
+```
+python3 fetch_spacex.py
+```
+
+Start posting photo in your telegram channel, with delay which you set in .env
 ```
 python3 tg_bot.py
 ```
 
-## Project goals <a name = "project_goals"></a>
+## Project goals
 
 The code is written for educational purposes on online-course for web-developers [dvmn.org](https://dvmn.org/).
