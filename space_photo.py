@@ -111,7 +111,7 @@ def fetch_nasa_epic_imgs(days):
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument('--spx', type=bool,
-        help='download spacex lastlaunch pics')
+                        help='download spacex lastlaunch pics')
     parser.add_argument(
         '--apods', type=int, help='number of day to dwload nasa apods pics', default=1)
     parser.add_argument(

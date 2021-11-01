@@ -1,31 +1,58 @@
 import os
-
+import time
 import random
+
 from dotenv import load_dotenv
 from telegram import Bot
 
 
-def send_message() -> None:
-    TOKEN = os.environ.get('TG_TOKEN')
+def send_photo(delay: int, repeat_after: int) -> None:
+    load_dotenv()
+    token = os.environ.get('TG_TOKEN')
+    id = os.environ.get('CHANNEL_ID')
 
-    bot = Bot(token=TOKEN)
+    bot = Bot(token)
+    __antirepeat = []
+    while True:
+        file = random.choice(get_file_paths())
+        if file in __antirepeat:
+            continue
+        bot.send_photo(chat_id=id,
+                       photo=open(f'{file}', 'rb'))
+        __antirepeat.append(file)
+        if len(__antirepeat) == repeat_after:
+            del __antirepeat[0]
+        time.sleep(delay)
 
-    while input('Send message? y/n >>> ') in ['y', 'Y']:
-        bot.send_message(chat_id='@WowSpaceClose',
-                         text=input('input text >>> '))
+
+def get_file_paths() -> list:
+    images_dir = os.walk('images')
+    paths = []
+    for path, _, files in images_dir:
+        for file in files:
+            paths.append(os.path.join(path, file))
+    return paths
 
 
-def send_photo() -> None:
-    TOKEN = os.environ.get('TG_TOKEN')
-
-    bot = Bot(token=TOKEN)
-
-    while input('Send photo? y/n >>> ') in ['y', 'Y']:
-        index = random.randint(1, 10)
-        bot.send_photo(chat_id='@WowSpaceClose',
-                       photo=open(f'images/nasa/{index}_nasa.jpg', 'rb'))
+def get_delay() -> int:
+    load_dotenv()
+    delay = []
+    hours = os.environ.get('HOUR')
+    if hours:
+        delay.append(int(hours)*3600)
+    minutes = os.environ.get('MIN')
+    if minutes:
+        delay.append(int(minutes)*60)
+    seconds = os.environ.get('SEC')
+    if seconds:
+        delay.append(int(seconds))
+    delay = sum(delay)
+    if not delay:
+        day = 24*3600
+        return day
+    return delay
 
 
 if __name__ == '__main__':
-    load_dotenv()
-    send_photo()
+    delay_in_sec = get_delay()
+    send_photo(delay_in_sec, repeat_after=10)
