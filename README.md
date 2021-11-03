@@ -32,9 +32,9 @@ CHANNEL_ID=@YourGroupForSpacePhoto
 
 Delay vars which using for pause beetween posting photo, default 24 hours, max 25 hours 1 min, like:
 ```
-SEC=10
-MIN=0
-HOUR=1
+DELAY_SECONDS=10
+DELAY_MINUTES=0
+DELAY_HOURS=1
 ```
 
 You need to create channel for posting photo and telegramm bot using @BotFather.
