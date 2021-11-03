@@ -1,5 +1,5 @@
 import os
-from urllib.parse import urlsplit
+from urllib.parse import urlparse, urlsplit, unquote
 
 import requests
 
@@ -23,5 +23,5 @@ def create_dir(whose_pic_name: str) -> str:
 
 
 def get_file_extension(url: str) -> str:
-    path = urlsplit(url).path
-    return os.path.splitext(path)[1]
+    components = urlparse(unquote(url, encoding='utf-8'))
+    return os.path.splitext(components.path)[-1]
