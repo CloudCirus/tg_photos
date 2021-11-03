@@ -5,8 +5,7 @@ import requests
 
 
 def download_pictures(links: list, whose_pic_name: str) -> None:
-    path = f'images/{whose_pic_name}'
-    os.makedirs(path)
+    path = create_dir(whose_pic_name)
 
     for index, link in enumerate(links, start=1):
         resp = requests.get(link)
@@ -14,6 +13,13 @@ def download_pictures(links: list, whose_pic_name: str) -> None:
         ext = get_file_extension(link)
         with open(f'{path}/{index}_{whose_pic_name}{ext}', 'wb') as f:
             f.write(resp.content)
+
+
+def create_dir(whose_pic_name: str) -> str:
+    path = f'images/{whose_pic_name}'
+    if not os.path.exists(path):
+        os.makedirs(path)
+    return path
 
 
 def get_file_extension(url: str) -> str:
