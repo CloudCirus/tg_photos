@@ -6,8 +6,7 @@ import requests
 
 def download_pictures(links: list, whose_pic_name: str) -> None:
     path = f'images/{whose_pic_name}'
-    if not os.path.exists(path):
-        os.makedirs(path)
+    os.makedirs(path)
 
     for index, link in enumerate(links, start=1):
         resp = requests.get(link)
