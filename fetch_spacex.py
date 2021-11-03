@@ -7,7 +7,7 @@ def get_all_spx_launches_id() -> list:
     url = f'https://api.spacexdata.com/v5/launches/'
     resp = requests.get(url)
     resp.raise_for_status()
-    return [lounch['id'] for lounch in resp.json()]
+    return [launch['id'] for launch in resp.json()]
 
 
 def get_spx_last_launch_img_links(launches_id: list) -> list:

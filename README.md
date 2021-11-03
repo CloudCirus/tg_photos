@@ -25,7 +25,7 @@ Key for telegram bot using @BotFather, like:
 TG_TOKEN=1010111111:AAAAAAA1A0aaaaaaaaaAaA1aaaa0AAaaaa0
 ```
 
-Channel id which will be used for for posting, like:
+Channel id which will be used for posting, like:
 ```
 CHANNEL_ID=@YourGroupForSpacePhoto
 ```
@@ -39,7 +39,7 @@ HOUR=1
 
 You need to create channel for posting photo and telegramm bot using @BotFather.
 
-When you create telegramm bot and channel for posting photo, you need to add your bot to admin group of your channel for posting, than tern on all admin settings for your telegramm bot.  
+When you create telegramm bot and channel for posting photo, you need to add your bot to admin group of your channel for posting, then turn on all admin settings for your telegramm bot.  
 
 ## Get started
 
