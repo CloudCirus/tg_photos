@@ -32,21 +32,11 @@ def get_file_paths() -> list:
 
 def get_delay() -> int:
     load_dotenv()
-    delay = []
-    hours = os.environ.get('DELAY_HOURS')
-    if hours:
-        delay.append(int(hours)*3600)
-    minutes = os.environ.get('DELAY_MINUTES')
-    if minutes:
-        delay.append(int(minutes)*60)
-    seconds = os.environ.get('DELAY_SECONDS')
-    if seconds:
-        delay.append(int(seconds))
-    delay = sum(delay)
-    if not delay:
-        day = 24*3600
-        return day
-    return delay
+    hours = int(os.environ.get('DELAY_HOURS'))
+    minutes = int(os.environ.get('DELAY_MINUTES'))
+    seconds = int(os.environ.get('DELAY_SECONDS'))
+    delay_in_sec = sum((hours*3600, minutes*60, seconds))
+    return delay_in_sec or 24 * 60 * 60
 
 
 if __name__ == '__main__':
