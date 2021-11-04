@@ -6,23 +6,19 @@ from dotenv import load_dotenv
 from telegram import Bot
 
 
-def send_photo(delay: int, repeat_after: int) -> None:
+def send_photo(delay: int) -> None:
     load_dotenv()
     token = os.environ.get('TG_TOKEN')
     id = os.environ.get('CHANNEL_ID')
 
     bot = Bot(token)
-    __antirepeat = []
     while True:
-        file = random.choice(get_file_paths())
-        if file in __antirepeat:
-            continue
-        bot.send_photo(chat_id=id,
-                       photo=open(f'{file}', 'rb'))
-        __antirepeat.append(file)
-        if len(__antirepeat) == repeat_after:
-            del __antirepeat[0]
-        time.sleep(delay)
+        paths = get_file_paths()
+        random.shuffle(paths)
+        print(paths)
+        for path in paths:
+            bot.send_photo(chat_id=id, photo=open(f'{path}', 'rb'))
+            time.sleep(delay)
 
 
 def get_file_paths() -> list:
@@ -55,4 +51,4 @@ def get_delay() -> int:
 
 if __name__ == '__main__':
     delay_in_sec = get_delay()
-    send_photo(delay_in_sec, repeat_after=10)
+    send_photo(delay_in_sec)
