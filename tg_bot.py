@@ -17,7 +17,8 @@ def send_photo(delay: int) -> None:
         random.shuffle(paths)
         print(paths)
         for path in paths:
-            bot.send_photo(chat_id=id, photo=open(f'{path}', 'rb'))
+            with open(f'{path}', 'rb') as photo:
+                bot.send_photo(chat_id=id, photo=photo)
             time.sleep(delay)
 
 
