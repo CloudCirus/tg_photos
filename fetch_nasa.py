@@ -64,7 +64,6 @@ def main() -> None:
         '--epic', type=int, help='number of day to dwload nasa epic pics', default=1)
     args = parser.parse_args()
 
-    print('Wait for downloading...')
     fetch_nasa_apods(args.apods)
     fetch_nasa_epic_imgs(args.epic)
 

@@ -25,5 +25,4 @@ def fetch_spacex_last_launch() -> None:
 
 
 if __name__ == '__main__':
-    print('Wait for downloading...')
     fetch_spacex_last_launch()
