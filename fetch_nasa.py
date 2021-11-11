@@ -37,7 +37,7 @@ def fetch_nasa_epic_imgs(days: int, api_key: str, path: str, whose_pic_name: str
     links = []
     for day in resp.json()[:days]:
         date = day.get('date')
-        url_date = 'https://api.nasa.gov/EPIC/api/natural/date/' + date
+        url_date = f'https://api.nasa.gov/EPIC/api/natural/date/{date}'
         resp_day = requests.get(url_date, params=options).json()[0]
 
         image = resp_day.get('image')
