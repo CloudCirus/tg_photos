@@ -7,7 +7,6 @@ from telegram import Bot
 
 
 def send_photo(delay: int) -> None:
-    load_dotenv()
     token = os.environ.get('TG_TOKEN')
     id = os.environ.get('CHANNEL_ID')
 
@@ -32,7 +31,6 @@ def get_file_paths() -> list:
 
 
 def get_delay() -> int:
-    load_dotenv()
     hours = int(os.environ.get('DELAY_HOURS', default=0))
     minutes = int(os.environ.get('DELAY_MINUTES', default=0))
     seconds = int(os.environ.get('DELAY_SECONDS', default=0))
@@ -41,5 +39,6 @@ def get_delay() -> int:
 
 
 if __name__ == '__main__':
+    load_dotenv()
     delay_in_sec = get_delay()
     send_photo(delay_in_sec)

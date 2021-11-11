@@ -1,7 +1,6 @@
 import argparse
 import os
 from datetime import datetime, timedelta
-from pprint import pprint
 
 import requests
 from dotenv import load_dotenv
@@ -10,7 +9,6 @@ from storage import download_pictures
 
 
 def get_nasa_apod_img_links(days: int) -> None:
-    load_dotenv()
     url = 'https://api.nasa.gov/planetary/apod'
     options = {
         'api_key': os.environ.get('NASA_API_KEY'),
@@ -29,7 +27,7 @@ def get_nasa_apod_img_links(days: int) -> None:
 
 
 def get_nasa_epic_img_links(days: int) -> list:
-    load_dotenv()
+
     url_all = 'https://api.nasa.gov/EPIC/api/natural/all'
     options = {
         'api_key': os.environ.get('NASA_API_KEY')
@@ -62,6 +60,7 @@ def fetch_nasa_epic_imgs(days):
 
 
 def main() -> None:
+    load_dotenv()
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--apods', type=int, help='number of day to dwload nasa apods pics', default=10)
