@@ -33,9 +33,9 @@ def get_file_paths() -> list:
 
 def get_delay() -> int:
     load_dotenv()
-    hours = int(os.environ.get('DELAY_HOURS'))
-    minutes = int(os.environ.get('DELAY_MINUTES'))
-    seconds = int(os.environ.get('DELAY_SECONDS'))
+    hours = int(os.environ.get('DELAY_HOURS', default=0))
+    minutes = int(os.environ.get('DELAY_MINUTES', default=0))
+    seconds = int(os.environ.get('DELAY_SECONDS', default=0))
     delay_in_sec = sum((hours*3600, minutes*60, seconds))
     return delay_in_sec or 24 * 60 * 60
 
