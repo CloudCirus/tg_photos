@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from storage import download_pictures
 
 
-def fetch_nasa_apods(days: int, api_key: str, whose_pic_name: str) -> None:
+def fetch_nasa_apods(days: int, api_key: str, path: str, whose_pic_name: str) -> None:
     url = 'https://api.nasa.gov/planetary/apod'
     options = {
         'api_key': api_key,
@@ -23,10 +23,10 @@ def fetch_nasa_apods(days: int, api_key: str, whose_pic_name: str) -> None:
             url = day.get('url')
             if url:
                 links.append(url)
-    download_pictures(links, whose_pic_name)
+    download_pictures(links, path, whose_pic_name)
 
 
-def fetch_nasa_epic_imgs(days: int, api_key: str, whose_pic_name: str) -> None:
+def fetch_nasa_epic_imgs(days: int, api_key: str, path: str, whose_pic_name: str) -> None:
     url_all = 'https://api.nasa.gov/EPIC/api/natural/all'
     options = {
         'api_key': api_key
@@ -44,7 +44,7 @@ def fetch_nasa_epic_imgs(days: int, api_key: str, whose_pic_name: str) -> None:
         date = date.replace('-', '/')
         url_img = f'https://api.nasa.gov/EPIC/archive/natural/{date}/png/{image}.png?api_key={options.get("api_key")}'
         links.append(url_img)
-    download_pictures(links, whose_pic_name)
+    download_pictures(links, path, whose_pic_name)
 
 
 def main() -> None:
@@ -59,9 +59,10 @@ def main() -> None:
     days_apods = args.apods
     days_epic = args.epic
     api_key = os.environ.get('NASA_API_KEY')
+    path = os.environ.get('STORAGE_PATH', default='images')
 
-    fetch_nasa_apods(days_apods, api_key, 'nasa')
-    fetch_nasa_epic_imgs(days_epic, api_key, 'nasa_epic')
+    fetch_nasa_apods(days_apods, api_key, path, 'nasa')
+    fetch_nasa_epic_imgs(days_epic, api_key, path, 'nasa_epic')
 
 
 if __name__ == '__main__':

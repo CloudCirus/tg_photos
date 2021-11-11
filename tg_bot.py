@@ -6,20 +6,19 @@ from dotenv import load_dotenv
 from telegram import Bot
 
 
-def send_photo(delay: int, token: str, id: str) -> None:
+def send_photo(delay: int, token: str, id: str, path: str) -> None:
     bot = Bot(token)
     while True:
-        paths = get_file_paths()
+        paths = get_file_paths(path)
         random.shuffle(paths)
-        print(paths)
         for path in paths:
             with open(f'{path}', 'rb') as photo:
                 bot.send_photo(chat_id=id, photo=photo)
             time.sleep(delay)
 
 
-def get_file_paths() -> list:
-    images_dir = os.walk('images')
+def get_file_paths(path: str) -> list:
+    images_dir = os.walk(path)
     paths = []
     for path, _, files in images_dir:
         for file in files:
@@ -39,9 +38,10 @@ def main() -> None:
     hours = int(os.environ.get('DELAY_HOURS', default=0))
     minutes = int(os.environ.get('DELAY_MINUTES', default=0))
     seconds = int(os.environ.get('DELAY_SECONDS', default=0))
+    path = os.environ.get('STORAGE_PATH', default='images')
 
     delay_in_sec = count_delay(hours, minutes, seconds)
-    send_photo(delay_in_sec, tg_token, channel_id)
+    send_photo(delay_in_sec, tg_token, channel_id, path)
 
 
 if __name__ == '__main__':

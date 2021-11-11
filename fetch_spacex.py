@@ -1,4 +1,7 @@
+import os
+
 import requests
+from dotenv import load_dotenv
 
 from storage import download_pictures
 
@@ -19,10 +22,12 @@ def get_spx_last_launch_img_links() -> list:
     return last_launch_with_imgs.get('links')
 
 
-def fetch_spacex_last_launch() -> None:
+def fetch_spacex_last_launch(path: str, whose_pic_name: str) -> None:
     last_launch = get_spx_last_launch_img_links()
-    download_pictures(last_launch, 'spacex')
+    download_pictures(last_launch, path, whose_pic_name)
 
 
 if __name__ == '__main__':
-    fetch_spacex_last_launch()
+    load_dotenv()
+    path = os.environ.get('STORAGE_PATH', default='images')
+    fetch_spacex_last_launch(path, 'spacex')

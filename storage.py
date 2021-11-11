@@ -4,8 +4,8 @@ from urllib.parse import urlparse, urlsplit, unquote
 import requests
 
 
-def download_pictures(links: list, whose_pic_name: str) -> None:
-    path = create_dir(whose_pic_name)
+def download_pictures(links: list, path: str, whose_pic_name: str) -> None:
+    path = create_dir(path, whose_pic_name)
 
     for index, link in enumerate(links, start=1):
         resp = requests.get(link)
@@ -15,8 +15,8 @@ def download_pictures(links: list, whose_pic_name: str) -> None:
             f.write(resp.content)
 
 
-def create_dir(whose_pic_name: str) -> str:
-    path = f'images/{whose_pic_name}'
+def create_dir(path: str, whose_pic_name: str) -> str:
+    path = f'{path}/{whose_pic_name}'
     if not os.path.exists(path):
         os.makedirs(path)
     return path
