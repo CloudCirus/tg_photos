@@ -6,10 +6,7 @@ from dotenv import load_dotenv
 from telegram import Bot
 
 
-def send_photo(delay: int) -> None:
-    token = os.environ.get('TG_TOKEN')
-    id = os.environ.get('CHANNEL_ID')
-
+def send_photo(delay: int, token: str, id: str) -> None:
     bot = Bot(token)
     while True:
         paths = get_file_paths()
@@ -30,15 +27,22 @@ def get_file_paths() -> list:
     return paths
 
 
-def get_delay() -> int:
-    hours = int(os.environ.get('DELAY_HOURS', default=0))
-    minutes = int(os.environ.get('DELAY_MINUTES', default=0))
-    seconds = int(os.environ.get('DELAY_SECONDS', default=0))
-    delay_in_sec = sum((hours*3600, minutes*60, seconds))
+def count_delay(hours: int, min: int, sec: int) -> int:
+    delay_in_sec = sum((hours*3600, min*60, sec))
     return delay_in_sec or 24 * 60 * 60
 
 
-if __name__ == '__main__':
+def main() -> None:
     load_dotenv()
-    delay_in_sec = get_delay()
-    send_photo(delay_in_sec)
+    tg_token = os.environ.get('TG_TOKEN')
+    channel_id = os.environ.get('CHANNEL_ID')
+    hours = int(os.environ.get('DELAY_HOURS', default=0))
+    minutes = int(os.environ.get('DELAY_MINUTES', default=0))
+    seconds = int(os.environ.get('DELAY_SECONDS', default=0))
+
+    delay_in_sec = count_delay(hours, minutes, seconds)
+    send_photo(delay_in_sec, tg_token, channel_id)
+
+
+if __name__ == '__main__':
+    main()

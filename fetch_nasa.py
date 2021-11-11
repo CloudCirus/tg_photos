@@ -8,10 +8,10 @@ from dotenv import load_dotenv
 from storage import download_pictures
 
 
-def get_nasa_apod_img_links(days: int) -> None:
+def fetch_nasa_apods(days: int, api_key: str, whose_pic_name: str) -> None:
     url = 'https://api.nasa.gov/planetary/apod'
     options = {
-        'api_key': os.environ.get('NASA_API_KEY'),
+        'api_key': api_key,
         'start_date': (datetime.now() - timedelta(days)).strftime('%Y-%m-%d'),
         'end_date': datetime.now().strftime('%Y-%m-%d'),
     }
@@ -23,14 +23,13 @@ def get_nasa_apod_img_links(days: int) -> None:
             url = day.get('url')
             if url:
                 links.append(url)
-    return links
+    download_pictures(links, whose_pic_name)
 
 
-def get_nasa_epic_img_links(days: int) -> list:
-
+def fetch_nasa_epic_imgs(days: int, api_key: str, whose_pic_name: str) -> None:
     url_all = 'https://api.nasa.gov/EPIC/api/natural/all'
     options = {
-        'api_key': os.environ.get('NASA_API_KEY')
+        'api_key': api_key
     }
     resp = requests.get(url_all, params=options)
     resp.raise_for_status()
@@ -43,20 +42,9 @@ def get_nasa_epic_img_links(days: int) -> list:
 
         image = resp_day.get('image')
         date = date.replace('-', '/')
-        url_img = f'https://api.nasa.gov/EPIC/archive/natural/{date}/png/{image}.png \
-                    ?api_key={options.get("api_key")}'
+        url_img = f'https://api.nasa.gov/EPIC/archive/natural/{date}/png/{image}.png?api_key={options.get("api_key")}'
         links.append(url_img)
-    return links
-
-
-def fetch_nasa_apods(days) -> None:
-    links = get_nasa_apod_img_links(days)
-    download_pictures(links, 'nasa')
-
-
-def fetch_nasa_epic_imgs(days):
-    links = get_nasa_epic_img_links(days)
-    download_pictures(links, 'nasa_epic')
+    download_pictures(links, whose_pic_name)
 
 
 def main() -> None:
@@ -68,8 +56,12 @@ def main() -> None:
         '--epic', type=int, help='number of day to dwload nasa epic pics', default=10)
     args = parser.parse_args()
 
-    fetch_nasa_apods(args.apods)
-    fetch_nasa_epic_imgs(args.epic)
+    days_apods = args.apods
+    days_epic = args.epic
+    api_key = os.environ.get('NASA_API_KEY')
+
+    fetch_nasa_apods(days_apods, api_key, 'nasa')
+    fetch_nasa_epic_imgs(days_epic, api_key, 'nasa_epic')
 
 
 if __name__ == '__main__':
