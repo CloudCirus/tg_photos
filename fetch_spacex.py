@@ -14,12 +14,8 @@ def get_spx_last_launch_img_links() -> list:
     for launch in reversed(all_launches_resp.json()):
         launch_imgs = launch['links']['flickr'].get('original')
         if launch_imgs:
-            last_launch_with_imgs = {
-                'flight_number': launch.get('flight_number'),
-                'links': launch_imgs,
-            }
-            break
-    return last_launch_with_imgs.get('links')
+            return launch_imgs
+
 
 
 def fetch_spacex_last_launch(path: str, whose_pic_name: str) -> None:

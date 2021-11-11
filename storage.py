@@ -1,5 +1,5 @@
 import os
-from urllib.parse import urlparse, urlsplit, unquote
+from urllib.parse import urlparse, unquote
 
 import requests
 
