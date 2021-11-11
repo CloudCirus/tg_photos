@@ -17,8 +17,7 @@ def download_pictures(links: list, path: str, whose_pic_name: str) -> None:
 
 def create_dir(path: str, whose_pic_name: str) -> str:
     path = f'{path}/{whose_pic_name}'
-    if not os.path.exists(path):
-        os.makedirs(path)
+    os.makedirs(path, exist_ok=True)
     return path
 
 
