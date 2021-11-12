@@ -23,7 +23,7 @@ def fetch_nasa_apods(days: int, api_key: str, path: str, whose_pic_name: str) ->
             url = day.get('url')
             if url:
                 links.append(url)
-    download_pictures(links, path, whose_pic_name)
+    download_pictures(links, path, whose_pic_name, options)
 
 
 def fetch_nasa_epic_imgs(days: int, api_key: str, path: str, whose_pic_name: str) -> None:
@@ -42,9 +42,9 @@ def fetch_nasa_epic_imgs(days: int, api_key: str, path: str, whose_pic_name: str
 
         image = resp_day.get('image')
         date = date.replace('-', '/')
-        url_img = f'https://api.nasa.gov/EPIC/archive/natural/{date}/png/{image}.png?api_key={options.get("api_key")}'
+        url_img = f'https://api.nasa.gov/EPIC/archive/natural/{date}/png/{image}.png'
         links.append(url_img)
-    download_pictures(links, path, whose_pic_name)
+    download_pictures(links, path, whose_pic_name, options)
 
 
 def main() -> None:
