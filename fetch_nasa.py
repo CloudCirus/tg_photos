@@ -53,9 +53,9 @@ def main() -> None:
     load_dotenv()
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--apods', type=int, help='number of day to dwload nasa apods pics', default=10)
+        '--apods', type=int, help='number of day to download nasa apods pics', default=10)
     parser.add_argument(
-        '--epic', type=int, help='number of day to dwload nasa epic pics', default=10)
+        '--epic', type=int, help='number of day to download nasa epic pics', default=10)
     args = parser.parse_args()
 
     days_apods = args.apods

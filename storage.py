@@ -4,9 +4,9 @@ from urllib.parse import urlparse, unquote
 import requests
 
 
-def download_pictures(links: list, path: str, whose_pic_name: str, options=None) -> None:
+def download_pictures(links: list, path: str, whose_pic_name: str, params=None) -> None:
     for index, link in enumerate(links, start=1):
-        resp = requests.get(link, params=options)
+        resp = requests.get(link, params=params)
         resp.raise_for_status()
         ext = get_file_extension(link)
         file_name = f'{index}_{whose_pic_name}{ext}'
