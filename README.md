@@ -35,7 +35,7 @@ Delay vars which using for pause beetween posting photo, default 24 hours, max 2
 DELAY_SECONDS=10
 DELAY_MINUTES=0
 DELAY_HOURS=1
-STORAGE_PATH=images
+STORAGE_NAME=images
 ```
 
 You need to create channel for posting photo and telegramm bot using @BotFather.

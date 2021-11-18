@@ -5,10 +5,10 @@ from datetime import datetime, timedelta
 import requests
 from dotenv import load_dotenv
 
-from storage import download_pictures
+from storage import download_pictures, create_dir
 
 
-def fetch_nasa_apods(days: int, api_key: str, path: str, whose_pic_name: str) -> None:
+def fetch_nasa_apods(days: int, api_key: str, storage_name: str, whose_pic_name: str) -> None:
     url = 'https://api.nasa.gov/planetary/apod'
     options = {
         'api_key': api_key,
@@ -23,10 +23,11 @@ def fetch_nasa_apods(days: int, api_key: str, path: str, whose_pic_name: str) ->
             url = day.get('url')
             if url:
                 links.append(url)
+    path = create_dir(storage_name, whose_pic_name)
     download_pictures(links, path, whose_pic_name, options)
 
 
-def fetch_nasa_epic_imgs(days: int, api_key: str, path: str, whose_pic_name: str) -> None:
+def fetch_nasa_epic_imgs(days: int, api_key: str, storage_name: str, whose_pic_name: str) -> None:
     url_all = 'https://api.nasa.gov/EPIC/api/natural/all'
     options = {
         'api_key': api_key
@@ -44,6 +45,7 @@ def fetch_nasa_epic_imgs(days: int, api_key: str, path: str, whose_pic_name: str
         date = date.replace('-', '/')
         url_img = f'https://api.nasa.gov/EPIC/archive/natural/{date}/png/{image}.png'
         links.append(url_img)
+    path = create_dir(storage_name, whose_pic_name)
     download_pictures(links, path, whose_pic_name, options)
 
 
@@ -59,10 +61,10 @@ def main() -> None:
     days_apods = args.apods
     days_epic = args.epic
     api_key = os.environ.get('NASA_API_KEY')
-    path = os.environ.get('STORAGE_PATH', default='images')
+    storage_name = os.environ.get('STORAGE_NAME', default='images')
 
-    fetch_nasa_apods(days_apods, api_key, path, 'nasa')
-    fetch_nasa_epic_imgs(days_epic, api_key, path, 'nasa_epic')
+    fetch_nasa_apods(days_apods, api_key, storage_name, 'nasa')
+    fetch_nasa_epic_imgs(days_epic, api_key, storage_name, 'nasa_epic')
 
 
 if __name__ == '__main__':
