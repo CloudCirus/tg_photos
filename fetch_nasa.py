@@ -21,8 +21,7 @@ def fetch_nasa_apods(days: int, api_key: str, storage_name: str, whose_pic_name:
     for day in resp.json():
         if day.get('media_type') == 'image':
             url = day.get('url')
-            if url:
-                links.append(url)
+            links.append(url)
     path = create_dir(storage_name, whose_pic_name)
     download_pictures(links, path, whose_pic_name, options)
 
@@ -39,8 +38,9 @@ def fetch_nasa_epic_imgs(days: int, api_key: str, storage_name: str, whose_pic_n
     for day in resp.json()[:days]:
         date = day.get('date')
         url_date = f'https://api.nasa.gov/EPIC/api/natural/date/{date}'
-        resp_day = requests.get(url_date, params=options).json()[0]
-
+        resp_day = requests.get(url_date, params=options)
+        resp_day.raise_for_status()
+        resp_day = resp_day.json()[0]
         image = resp_day.get('image')
         date = date.replace('-', '/')
         url_img = f'https://api.nasa.gov/EPIC/archive/natural/{date}/png/{image}.png'
@@ -64,7 +64,7 @@ def main() -> None:
     storage_name = os.environ.get('STORAGE_NAME', default='images')
 
     fetch_nasa_apods(days_apods, api_key, storage_name, 'nasa')
-    fetch_nasa_epic_imgs(days_epic, api_key, storage_name, 'nasa_epic')
+    # fetch_nasa_epic_imgs(days_epic, api_key, storage_name, 'nasa_epic')
 
 
 if __name__ == '__main__':
