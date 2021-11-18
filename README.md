@@ -49,8 +49,8 @@ Download nasa photos in your project dir:
 python3 fetch_nasa.py
 ```
 You can use args:
-- --apods=int for download chosen number nasa apods pics, default 1
-- --epic=int for download shosen number of nasa pics Earth planet, default 1
+- --apods=int, number of day to download nasa apods pics, default 10
+- --epic=int, number of day to download nasa epic pics Earth planet, default 10
 
 Find and download last spacex launch photos in your project dir:
 ```
